@@ -1,0 +1,35 @@
+# Import library to be able to use draw tools
+import pygame
+from math import pi
+
+# this is used to load the console
+pygame.init()
+
+# setting the size of the frame or specifying a region of an area 
+size = [x, y]
+screen = pygame.display.set_mode(size)
+
+## can use this line to display the title, but not needed for our scope
+pygame.display.set_caption("insert title")
+
+# this loop is used to keep the window opened until user closes out of window
+done = False
+clock = pygame.time.Clock()
+
+while not done: 
+	clock.tick(10)
+	
+	for event in pygame.event.get():
+		if event.type == pygame.QUIT:
+			done=True
+
+	# this line is used to clear the window and set background color (later background will be a portion of a location on a map)
+	screen.fill(color)
+
+	# draw circle
+	pygame.draw.circle(screen, color, pos([x, y]), radius, width)
+
+	#this line is used to display the drawings on the screen	
+	pygame.display.flip()
+
+pygame.quit()
