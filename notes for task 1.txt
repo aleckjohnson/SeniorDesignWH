@@ -31,5 +31,6 @@ while not done:
 
 	#this line is used to display the drawings on the screen	
 	pygame.display.flip()
-
+	
+# this line exits the program
 pygame.quit()
