@@ -5,9 +5,12 @@ from math import pi
 # this is used to load the console
 pygame.init()
 
-# setting the size of the frame or specifying a region of an area 
-size = [x, y]
+# setting the size of the frame or specifying a region of an area
+size = [800, 640]
 screen = pygame.display.set_mode(size)
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+BLUE = [0, 0, 255]
 
 ## can use this line to display the title, but not needed for our scope
 pygame.display.set_caption("insert title")
@@ -16,21 +19,81 @@ pygame.display.set_caption("insert title")
 done = False
 clock = pygame.time.Clock()
 
-while not done: 
-	clock.tick(10)
-	
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			done=True
+while not done:
+    clock.tick(10)
 
-	# this line is used to clear the window and set background color (later background will be a portion of a location on a map)
-	screen.fill(color)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
 
-	# draw circle
-	pygame.draw.circle(screen, color, pos([x, y]), radius, width)
+    # this line is used to clear the window and set background color (later background will be a portion of a location on a map)
+    screen.fill(WHITE)
 
-	#this line is used to display the drawings on the screen	
-	pygame.display.flip()
-	
+    # draw circle
+    # first row of circles
+    pygame.draw.circle(screen, BLACK, [80, 80], 80, 1)
+    pygame.draw.circle(screen, BLACK, [240, 80], 80, 1)
+    pygame.draw.circle(screen, BLACK, [400, 80], 80, 1)
+    pygame.draw.circle(screen, BLACK, [560, 80], 80, 1)
+    pygame.draw.circle(screen, BLACK, [720, 80], 80, 1)
+    # second row of circles
+    pygame.draw.circle(screen, BLACK, [80, 240], 80, 1)
+    pygame.draw.circle(screen, BLACK, [240, 240], 80, 1)
+    pygame.draw.circle(screen, BLACK, [400, 240], 80, 1)
+    pygame.draw.circle(screen, BLACK, [560, 240], 80, 1)
+    pygame.draw.circle(screen, BLACK, [720, 240], 80, 1)
+    # third row of circles
+    pygame.draw.circle(screen, BLACK, [80, 400], 80, 1)
+    pygame.draw.circle(screen, BLACK, [240, 400], 80, 1)
+    pygame.draw.circle(screen, BLACK, [400, 400], 80, 1)
+    pygame.draw.circle(screen, BLACK, [560, 400], 80, 1)
+    pygame.draw.circle(screen, BLACK, [720, 400], 80, 1)
+    # 4th row of circles
+    pygame.draw.circle(screen, BLACK, [80, 560], 80, 1)
+    pygame.draw.circle(screen, BLACK, [240, 560], 80, 1)
+    pygame.draw.circle(screen, BLACK, [400, 560], 80, 1)
+    pygame.draw.circle(screen, BLACK, [560, 560], 80, 1)
+    pygame.draw.circle(screen, BLACK, [720, 560], 80, 1)
+
+    ###########################
+    # first row
+    pygame.draw.circle(screen, BLUE, [0, 0], 80, 1)
+    pygame.draw.circle(screen, BLUE, [160, 0], 80, 1)
+    pygame.draw.circle(screen, BLUE, [320, 0], 80, 1)
+    pygame.draw.circle(screen, BLUE, [480, 0], 80, 1)
+    pygame.draw.circle(screen, BLUE, [640, 0], 80, 1)
+    pygame.draw.circle(screen, BLUE, [800, 0], 80, 1)
+    # second row
+    pygame.draw.circle(screen, BLUE, [0, 160], 80, 1)
+    pygame.draw.circle(screen, BLUE, [160, 160], 80, 1)
+    pygame.draw.circle(screen, BLUE, [320, 160], 80, 1)
+    pygame.draw.circle(screen, BLUE, [480, 160], 80, 1)
+    pygame.draw.circle(screen, BLUE, [640, 160], 80, 1)
+    pygame.draw.circle(screen, BLUE, [800, 160], 80, 1)
+    # third row
+    pygame.draw.circle(screen, BLUE, [0, 320], 80, 1)
+    pygame.draw.circle(screen, BLUE, [160, 320], 80, 1)
+    pygame.draw.circle(screen, BLUE, [320, 320], 80, 1)
+    pygame.draw.circle(screen, BLUE, [480, 320], 80, 1)
+    pygame.draw.circle(screen, BLUE, [640, 320], 80, 1)
+    pygame.draw.circle(screen, BLUE, [800, 320], 80, 1)
+    # 4th row
+    pygame.draw.circle(screen, BLUE, [0, 480], 80, 1)
+    pygame.draw.circle(screen, BLUE, [160, 480], 80, 1)
+    pygame.draw.circle(screen, BLUE, [320, 480], 80, 1)
+    pygame.draw.circle(screen, BLUE, [480, 480], 80, 1)
+    pygame.draw.circle(screen, BLUE, [640, 480], 80, 1)
+    pygame.draw.circle(screen, BLUE, [800, 480], 80, 1)
+    # 5th row
+    pygame.draw.circle(screen, BLUE, [0, 640], 80, 1)
+    pygame.draw.circle(screen, BLUE, [160, 640], 80, 1)
+    pygame.draw.circle(screen, BLUE, [320, 640], 80, 1)
+    pygame.draw.circle(screen, BLUE, [480, 640], 80, 1)
+    pygame.draw.circle(screen, BLUE, [640, 640], 80, 1)
+    pygame.draw.circle(screen, BLUE, [800, 640], 80, 1)
+
+    # this line is used to display the drawings on the screen
+    pygame.display.flip()
+
 # this line exits the program
 pygame.quit()
