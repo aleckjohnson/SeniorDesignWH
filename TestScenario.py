@@ -19,7 +19,7 @@ class OffLimitArea:
 
     def contains(self, x, y):
         #is the specified point within the defined area? if yes return true, otherwise return false
-        print("Running check...")
+        print("Running check in area between ", self._origin, " and ", self._end)
         if (x >= self._origin[0]) and (x <= self._end[0]):
             if (y >= self._origin[1]) and (y <= self._end[1]):
                 return True
@@ -51,7 +51,7 @@ class WifiNode:
     def __init__(self, orig, rad):
         self._radius = rad
         self._origin = orig
-        print("Created a wifi node at (", self._origin[0], ", ", self._origin[1], ") with a radius of ", self._radius)
+        print("Created a wifi node at ", self._origin, " with a radius of ", self._radius)
         x = orig[0]
         y = orig[1]
         self._notAllowed.setArea([x - rad, y - rad], [x + rad, y + rad])
@@ -78,49 +78,39 @@ class WifiNode:
     def getOrigin(self):
         return self._origin
 
-size = [200, 200]
+size = [500, 500]
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 BLUE = [0, 0, 255]
 
-noNoSquare = OffLimitArea([random.randint(0, 75), random.randint(0, 75)], [random.randint(100, 175), random.randint(100, 175)])
-
 radius = 20
 
 nodeList = []
+noNoSquareList = []
 
-#for x in range(200):
-#    for y in range(200):
-#        good = True
-#        #first check if the point is within our initial blocked off area
-#        if noNoSquare.contains(x, y):
-#            #print("Point (", x, ", ", y,") within off limits area")
-#            good = False
-#        else:
-#            #now check if the point is within any of the nodes already spawned
-#            for n in nodeList:
-#                if n.contains(x, y):
-#                    good = False
-#                    #print("Point (", x, ", ", y, ") within existing node")
-#                    break
-#
-#        if good:
-#            #Add node to list
-#            nodeList.append(WifiNode([x, y], radius))
-
-x = random.randint(0, size[0])
-y = random.randint(0, size[1])
-
-while (noNoSquare.contains(x, y)):
+for i in range(random.randint(1, size[0]/10)):
     x = random.randint(0, size[0])
     y = random.randint(0, size[1])
+    xdif = random.randint(19, 100)
+    ydif = random.randint(19, 100)
+    noNoSquareList.append(OffLimitArea([x, y], [x + xdif, y + ydif]))
+
+cont = True
+while cont:
+    cont = False
+    x = random.randint(0, size[0])
+    y = random.randint(0, size[1])
+    for o in noNoSquareList:
+        if o.contains(x, y):
+            cont = True
+            break
 
 nodeList.append(WifiNode([x, y], radius))
 
-l=0
+l = 0
 newl = len(nodeList)
 
-while l!=newl:
+while l != newl:
     for i in range(l, newl):
         addRad = (nodeList[i].getRadius() + 1)
         for j in range(4):
@@ -139,7 +129,11 @@ while l!=newl:
             print("Testing location ", newLoc)
 
             if (newLoc[0] >= 0) and (newLoc[0] <= size[0]) and (newLoc[1] >= 0) and (newLoc[1] <= size[1]):
-                if noNoSquare.contains(newLoc[0], newLoc[1]):
+                for o in noNoSquareList:
+                    if o.contains(newLoc[0], newLoc[1]):
+                        good = False
+                        break
+                if not good:
                     print(newLoc, " in off limits area")
                     good = False
                 else:
@@ -186,7 +180,8 @@ while not done:
     screen.fill(WHITE)
 
     #draw the off limit area
-    pygame.draw.rect(screen, BLACK, pygame.Rect(noNoSquare.getOrigX(), noNoSquare.getOrigY(), noNoSquare.getEndX() - noNoSquare.getOrigX(), noNoSquare.getEndY() - noNoSquare.getOrigY()))
+    for o in noNoSquareList:
+        pygame.draw.rect(screen, BLACK, pygame.Rect(o.getOrigX(), o.getOrigY(), o.getEndX() - o.getOrigX(), o.getEndY() - o.getOrigY()))
 
     #draw all the nodes in the list
     for n in nodeList:
