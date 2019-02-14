@@ -79,9 +79,10 @@ class WifiNode:
         return self._origin
 
 size = [500, 500]
-WHITE = (255, 255, 255)
-BLACK = (0, 0, 0)
+WHITE = [255, 255, 255]
+BLACK = [0, 0, 0]
 BLUE = [0, 0, 255]
+PURPLE = [255, 0, 255]
 
 radius = 20
 
@@ -146,7 +147,7 @@ while y <= size[1]:
         if good:
             print(newLoc, " passed")
             nodeList.append(WifiNode(newLoc, radius))
-            print("Current number of nodes: ", len(nodeList))
+        print("Current number of nodes: ", len(nodeList))
 
 
 print("Nodes calculated. Prepare to print to screen!")
@@ -172,9 +173,17 @@ while not done:
         pygame.draw.rect(screen, BLACK, pygame.Rect(o.getOrigX(), o.getOrigY(), o.getEndX() - o.getOrigX(), o.getEndY() - o.getOrigY()))
 
     #draw all the nodes in the list
+    b = True
     for n in nodeList:
-        pygame.draw.circle(screen, BLUE, n.getOrigin(), n.getRadius(), 1)
-        pygame.draw.circle(screen, BLUE, n.getOrigin(), 1)
+        if b:
+            pygame.draw.circle(screen, BLUE, n.getOrigin(), n.getRadius(), 1)
+            pygame.draw.circle(screen, BLUE, n.getOrigin(), 1)
+            b = False
+        else:
+            pygame.draw.circle(screen, PURPLE, n.getOrigin(), n.getRadius(), 1)
+            pygame.draw.circle(screen, PURPLE, n.getOrigin(), 1)
+            b = True
+
 
 
 
