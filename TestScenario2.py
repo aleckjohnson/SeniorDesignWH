@@ -78,13 +78,13 @@ class WifiNode:
     def getOrigin(self):
         return self._origin
 
-size = [500, 500]
+size = [800, 800]
 WHITE = [255, 255, 255]
 BLACK = [0, 0, 0]
 BLUE = [0, 0, 255]
 PURPLE = [255, 0, 255]
 
-radius = 20
+radius = 50
 
 nodeList = []
 noNoSquareList = []
@@ -153,6 +153,7 @@ while y <= size[1]:
 print("Nodes calculated. Prepare to print to screen!")
 
 screen = pygame.display.set_mode(size)
+back = pygame.image.load("backgroundforsd.jpg")
 
 # this loop is used to keep the window opened until user closes out of window
 done = False
@@ -171,7 +172,7 @@ while not done:
     #draw the off limit area
     for o in noNoSquareList:
         pygame.draw.rect(screen, BLACK, pygame.Rect(o.getOrigX(), o.getOrigY(), o.getEndX() - o.getOrigX(), o.getEndY() - o.getOrigY()))
-
+        screen.blit(back,(0,0))
     #draw all the nodes in the list
     b = True
     for n in nodeList:
