@@ -1,5 +1,6 @@
 import pygame
 import random
+import ctypes  # An included library with Python install.
 
 #import OffLimitArea
 class OffLimitArea:
@@ -148,7 +149,7 @@ while y <= size[1]:
             print(newLoc, " passed")
             nodeList.append(WifiNode(newLoc, radius))
         print("Current number of nodes: ", len(nodeList))
-
+        totalNodes = len(nodeList)
 
 print("Nodes calculated. Prepare to print to screen!")
 
@@ -186,9 +187,8 @@ while not done:
             b = True
 
 
-
-
     pygame.display.flip()
 
+ctypes.windll.user32.MessageBoxW(0, "There are "+str(totalNodes), "Total Nodes", 1)
 
 pygame.quit()
