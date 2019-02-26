@@ -189,6 +189,9 @@ while not done:
 
     pygame.display.flip()
 
-ctypes.windll.user32.MessageBoxW(0, "There are "+str(totalNodes), "Total Nodes", 1)
+ciscoCost = totalNodes * 3000
+ruckusCost = totalNodes * 3500
+print("The Estimated Associated cost for "+str(totalNodes)+" Nodes is: Cisco Aironet 1572EAC: $"+str(ciscoCost)+" Ruckus T811-CM: $"+str(ruckusCost))
+ctypes.windll.user32.MessageBoxW(0, "The Estimated Associated cost for "+str(totalNodes)+" Nodes is: Cisco Aironet 1572EAC: $"+str(ciscoCost)+" Ruckus T811-CM: $"+str(ruckusCost),"Estimated Node Cost", 1)
 
 pygame.quit()
