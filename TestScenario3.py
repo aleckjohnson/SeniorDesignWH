@@ -130,25 +130,25 @@ class WifiNode:
     def getOrigin(self):
         return self._origin
 
-size = [500, 500]
-WHITE = [255, 255, 255]
-BLACK = [0, 0, 0]
-BLUE = [0, 0, 255]
-PURPLE = [255, 0, 255]
-GREEN = [0, 255, 0]
-YELLOW = [255, 255, 0]
-GOLD = [255, 204, 0]
-REDORANGE = [255, 51, 0]
-RED = [255, 0, 0]
+size = [750, 750]
+WHITE = [255, 255, 255, 255]
+BLACK = [0, 0, 0, 255]
+BLUE = [0, 0, 255, 255]
+PURPLE = [255, 0, 255, 255]
+GREEN = [0, 255, 0, 100]
+YELLOW = [255, 255, 0, 100]
+GOLD = [255, 204, 0, 100]
+REDORANGE = [255, 51, 0, 100]
+RED = [255, 0, 0, 100]
 
-pixPerKM = 1000 #Pixels per kilometer conversion
+pixPerKM = 750 #Pixels per kilometer conversion
 frequency = float(2400)
 
 
 nodeList = []
 noNoSquareList = []
 
-for i in range(random.randint(size[0]/20, size[0]/10)):
+for i in range(random.randint(int(size[0]/20), int(size[0]/10))):
     x = random.randint(0, size[0])
     y = random.randint(0, size[1])
     xdif = random.randint(19, 100)
@@ -178,7 +178,7 @@ if not cont:
     nodeList.append(WifiNode([x, y], frequency, pixPerKM))
 
 while y <= size[1]:
-    addRad = int(nodeList[len(nodeList) - 1].getRad80() * pixPerKM) + 1
+    addRad = max(int(nodeList[len(nodeList) - 1].getRad80() * pixPerKM), 1)
     if x < size[0]:
         x += addRad
     else:
@@ -215,12 +215,14 @@ while y <= size[1]:
 print("Nodes calculated. Prepare to print to screen!")
 
 screen = pygame.display.set_mode(size)
+surface = pygame.Surface(size, pygame.SRCALPHA, 32)
 
 # this loop is used to keep the window opened until user closes out of window
 done = False
 clock = pygame.time.Clock()
 
 while not done:
+    surfaces = []
     clock.tick(10)
 
     for event in pygame.event.get():
@@ -236,14 +238,17 @@ while not done:
 
     #draw all the nodes in the list
     for n in nodeList:
-        pygame.draw.circle(screen, RED, n.getOrigin(), max(int(n.getRad90() * pixPerKM), 1), 1)
-        pygame.draw.circle(screen, REDORANGE, n.getOrigin(), max(int(n.getRad80() * pixPerKM), 1), 1)
-        pygame.draw.circle(screen, GOLD, n.getOrigin(), max(int(n.getRad70() * pixPerKM), 1), 1)
-        pygame.draw.circle(screen, YELLOW, n.getOrigin(), max(int(n.getRad67() * pixPerKM), 1), 1)
-        pygame.draw.circle(screen, GREEN, n.getOrigin(), max(int(n.getRad30() * pixPerKM), 1), 1)
-        pygame.draw.circle(screen, BLUE, n.getOrigin(), 1)
+        surf = pygame.Surface(size, pygame.SRCALPHA, 32)
+        #pygame.draw.circle(surf, RED, n.getOrigin(), max(int(n.getRad90() * pixPerKM), 1))
+        pygame.draw.circle(surf, REDORANGE, n.getOrigin(), max(int(n.getRad80() * pixPerKM), 1))
+        pygame.draw.circle(surf, GOLD, n.getOrigin(), max(int(n.getRad70() * pixPerKM), 1))
+        pygame.draw.circle(surf, YELLOW, n.getOrigin(), max(int(n.getRad67() * pixPerKM), 1))
+        pygame.draw.circle(surf, GREEN, n.getOrigin(), max(int(n.getRad30() * pixPerKM), 1))
+        pygame.draw.circle(surf, BLUE, n.getOrigin(), 1)
+        surfaces.append(surf)
 
-
+    for surf in surfaces:
+        screen.blit(surf, [0, 0])
 
 
     pygame.display.flip()
