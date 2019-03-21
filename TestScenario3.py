@@ -142,7 +142,7 @@ GOLD = [255, 204, 0, 50]
 REDORANGE = [255, 51, 0, 50]
 RED = [255, 0, 0, 50]
 
-pixPerKM = 750 #Pixels per kilometer conversion
+pixPerKM = 100 #Pixels per kilometer conversion
 frequency = float(2400)
 
 
@@ -224,41 +224,41 @@ surface = pygame.Surface(size, pygame.SRCALPHA, 32)
 done = False
 clock = pygame.time.Clock()
 
-while not done:
-    surfaces = []
-    clock.tick(10)
+surfaces = []
+#this line is used to clear the window and set background color (later background will be a portion of a location on a map)
+screen.fill(WHITE)
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
+#draw the off limit area
+for o in noNoSquareList:
+    pygame.draw.rect(screen, BLACK, pygame.Rect(o.getOrigX(), o.getOrigY(), o.getEndX() - o.getOrigX(), o.getEndY() - o.getOrigY()))
+    screen.blit(back,(0,0))
+#draw all the nodes in the list
+for n in nodeList:
+    surf = pygame.Surface(size, pygame.SRCALPHA, 32)
+    #pygame.draw.circle(surf, RED, n.getOrigin(), max(int(n.getRad90() * pixPerKM), 1))
+    pygame.draw.circle(surf, REDORANGE, n.getOrigin(), max(int(n.getRad80() * pixPerKM), 1))
+    pygame.draw.circle(surf, GOLD, n.getOrigin(), max(int(n.getRad70() * pixPerKM), 1))
+    pygame.draw.circle(surf, YELLOW, n.getOrigin(), max(int(n.getRad67() * pixPerKM), 1))
+    pygame.draw.circle(surf, GREEN, n.getOrigin(), max(int(n.getRad30() * pixPerKM), 1))
+    pygame.draw.circle(surf, BLUE, n.getOrigin(), 1)
+    surfaces.append(surf)
 
-    #this line is used to clear the window and set background color (later background will be a portion of a location on a map)
-    screen.fill(WHITE)
-
-    #draw the off limit area
-    for o in noNoSquareList:
-        pygame.draw.rect(screen, BLACK, pygame.Rect(o.getOrigX(), o.getOrigY(), o.getEndX() - o.getOrigX(), o.getEndY() - o.getOrigY()))
-        screen.blit(back,(0,0))
-    #draw all the nodes in the list
-    for n in nodeList:
-        surf = pygame.Surface(size, pygame.SRCALPHA, 32)
-        #pygame.draw.circle(surf, RED, n.getOrigin(), max(int(n.getRad90() * pixPerKM), 1))
-        pygame.draw.circle(surf, REDORANGE, n.getOrigin(), max(int(n.getRad80() * pixPerKM), 1))
-        pygame.draw.circle(surf, GOLD, n.getOrigin(), max(int(n.getRad70() * pixPerKM), 1))
-        pygame.draw.circle(surf, YELLOW, n.getOrigin(), max(int(n.getRad67() * pixPerKM), 1))
-        pygame.draw.circle(surf, GREEN, n.getOrigin(), max(int(n.getRad30() * pixPerKM), 1))
-        pygame.draw.circle(surf, BLUE, n.getOrigin(), 1)
-        surfaces.append(surf)
-
-    for surf in surfaces:
-        screen.blit(surf, [0, 0])
+for surf in surfaces:
+    screen.blit(surf, [0, 0])
 
 
-    pygame.display.flip()
+pygame.display.flip()
 
 ciscoCost = totalNodes * 3000
 ruckusCost = totalNodes * 3500
 print("The Estimated Associated cost for "+str(totalNodes)+" Nodes is: Cisco Aironet 1572EAC: $"+str(ciscoCost)+" Ruckus T811-CM: $"+str(ruckusCost))
 ctypes.windll.user32.MessageBoxW(0, "The Estimated Associated cost for "+str(totalNodes)+" Nodes is: Cisco Aironet 1572EAC: $"+str(ciscoCost)+" Ruckus T811-CM: $"+str(ruckusCost),"Estimated Node Cost", 1)
+
+while not done:
+    clock.tick(10)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
 
 pygame.quit()
