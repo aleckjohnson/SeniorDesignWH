@@ -215,6 +215,7 @@ while y <= size[1]:
 print("Nodes calculated. Prepare to print to screen!")
 
 screen = pygame.display.set_mode(size)
+back = pygame.image.load("WinterHaven_new.png")
 surface = pygame.Surface(size, pygame.SRCALPHA, 32)
 
 # this loop is used to keep the window opened until user closes out of window
@@ -235,7 +236,7 @@ while not done:
     #draw the off limit area
     for o in noNoSquareList:
         pygame.draw.rect(screen, BLACK, pygame.Rect(o.getOrigX(), o.getOrigY(), o.getEndX() - o.getOrigX(), o.getEndY() - o.getOrigY()))
-
+        screen.blit(back,(0,0))
     #draw all the nodes in the list
     for n in nodeList:
         surf = pygame.Surface(size, pygame.SRCALPHA, 32)
