@@ -135,11 +135,11 @@ WHITE = [255, 255, 255, 255]
 BLACK = [0, 0, 0, 255]
 BLUE = [0, 0, 255, 255]
 PURPLE = [255, 0, 255, 255]
-GREEN = [0, 255, 0, 100]
-YELLOW = [255, 255, 0, 100]
-GOLD = [255, 204, 0, 100]
-REDORANGE = [255, 51, 0, 100]
-RED = [255, 0, 0, 100]
+GREEN = [0, 255, 0, 50]
+YELLOW = [255, 255, 0, 50]
+GOLD = [255, 204, 0, 50]
+REDORANGE = [255, 51, 0, 50]
+RED = [255, 0, 0, 50]
 
 pixPerKM = 750 #Pixels per kilometer conversion
 frequency = float(2400)
