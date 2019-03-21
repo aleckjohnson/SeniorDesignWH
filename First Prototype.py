@@ -4,6 +4,7 @@
 
 # Import library to be able to use draw tools
 import pygame
+import OffLimitArea
 
 # this is used to load the console
 pygame.init()
