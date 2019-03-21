@@ -1,6 +1,7 @@
 import pygame
 import random
 import math
+import ctypes  # An included library with Python install.
 
 #import OffLimitArea
 class OffLimitArea:
@@ -210,12 +211,13 @@ while y <= size[1]:
             nodeList.append(WifiNode(newLoc, frequency, pixPerKM))
 
         print("Current number of nodes: ", len(nodeList))
-
+totalNodes = len(nodeList)
 
 print("Nodes calculated. Prepare to print to screen!")
 
 screen = pygame.display.set_mode(size)
 back = pygame.image.load("WinterHaven_new.png")
+back = pygame.transform.scale(back, (750, 750))
 surface = pygame.Surface(size, pygame.SRCALPHA, 32)
 
 # this loop is used to keep the window opened until user closes out of window
@@ -254,5 +256,9 @@ while not done:
 
     pygame.display.flip()
 
+ciscoCost = totalNodes * 3000
+ruckusCost = totalNodes * 3500
+print("The Estimated Associated cost for "+str(totalNodes)+" Nodes is: Cisco Aironet 1572EAC: $"+str(ciscoCost)+" Ruckus T811-CM: $"+str(ruckusCost))
+ctypes.windll.user32.MessageBoxW(0, "The Estimated Associated cost for "+str(totalNodes)+" Nodes is: Cisco Aironet 1572EAC: $"+str(ciscoCost)+" Ruckus T811-CM: $"+str(ruckusCost),"Estimated Node Cost", 1)
 
 pygame.quit()
