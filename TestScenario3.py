@@ -1,7 +1,37 @@
+# OSMNX imports
+import sys		# For reading arguments from the command line.
+import networkx as nx
+import osmnx as ox
+import requests
+import matplotlib.cm as cm
+import matplotlib.colors as colors
+
+# PyGame imports
 import pygame
 import random
 import math
 import ctypes  # An included library with Python install.
+
+# Zoom function. Still needs to be implemented.
+# Find a way to pull from mouse (pynput library?) or zoom in and out using pygame. 
+
+if(len(sys.argv) < 4):
+	sys.exit("One of the following is missing: City, State, or Country.")
+
+def zoom(location_point):
+	G2 = ox.graph_from_point(location_point, distance=500, distance_type='bbox', network_type='all_private')
+	G2 = ox.project_graph(G2)
+	fig, ax = ox.plot_graph(G2, node_size=30, node_color='#66cc66', save=True)
+	
+
+# Read in arguments from the command line and grab the corresponding area.
+def makeGraph(city, state, country):
+	G = ox.graph_from_place(city+','+state+','+country, network_type='all_private')
+	fig, ax = ox.plot_graph(G, node_size=0, save=True)
+
+
+makeGraph(str(sys.argv[1]), str(sys.argv[2]), str(sys.argv[3]))
+
 
 #import OffLimitArea
 class OffLimitArea:
@@ -216,7 +246,7 @@ totalNodes = len(nodeList)
 print("Nodes calculated. Prepare to print to screen!")
 
 screen = pygame.display.set_mode(size)
-back = pygame.image.load("WinterHaven_new.png")
+back = pygame.image.load("images/temp.png")		# Image saved from previous run.
 back = pygame.transform.scale(back, (750, 750))
 surface = pygame.Surface(size, pygame.SRCALPHA, 32)
 

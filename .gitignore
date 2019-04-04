@@ -1,0 +1,10 @@
+# Git Ignore File
+# Please place any files you do not want to be tracked by git here.
+
+[Cc]ache/
+[Ii]mages/
+[Dd]ata/
+*.png
+*.jpg
+*.jpeg
+*.swp
