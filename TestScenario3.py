@@ -1,5 +1,7 @@
 from PIL import Image
+import tkinter as tk
 from tkinter import messagebox
+
 
 # OSMNX imports
 import sys		# For reading arguments from the command line.
@@ -26,13 +28,18 @@ def zoom(location_point):
 	fig, ax = ox.plot_graph(G2, node_size=30, node_color='#66cc66', save=True)
 	
 
+sqrMeters = 0.0
+
 # Read in arguments from the command line and grab the corresponding area.
 def makeGraph(city, state, country):
-	G = ox.graph_from_place(city+','+state+','+country, network_type='all_private')
-	fig, ax = ox.plot_graph(G, node_size=0, save=True)
+    G = ox.graph_from_place(city+','+state+','+country, network_type='all_private')
+    fig, ax = ox.plot_graph(G, node_size=0, save=True, show=False)
+    proj = ox.project_graph(G)
+    gdfs = ox.graph_to_gdfs(proj, edges=False)
+    return gdfs.unary_union.convex_hull.area
 
 
-makeGraph(str(sys.argv[1]), str(sys.argv[2]), str(sys.argv[3]))
+sqrMeters = makeGraph(str(sys.argv[1]), str(sys.argv[2]), str(sys.argv[3]))
 
 #import WifiNode
 
@@ -113,6 +120,13 @@ im = Image.open("images/temp.png")
 pix = im.load()
 size = [im.size[0], im.size[1]]
 
+ratio = float(im.size[1])/float(im.size[0])
+
+temp = float(sqrMeters) / float(ratio)
+x = math.sqrt(temp)
+ppm = float(im.size[0])/x
+pixPerKM = ppm*float(1000) #Pixels per kilometer conversion
+
 nodeList = []
 noNoSquareList = []
 streets = []
@@ -127,9 +141,11 @@ GOLD = [255, 204, 0, 50]
 REDORANGE = [255, 51, 0, 50]
 RED = [255, 0, 0, 50]
 
-pixPerKM = 100 #Pixels per kilometer conversion
+
+
 frequency = float(2400)
 
+print(str(pixPerKM))
 populated = []
 for x in range(size[0]):
     newArr = []
@@ -159,9 +175,11 @@ for y in range(size[1]):
 print("Nodes calculated. Prepare to print to screen!")
 totalNodes = len(nodeList)
 
+print("Adding background...")
 screen = pygame.display.set_mode(size)
-back = pygame.image.load("images/temp.png")		# Image saved from previous run.
-surface = pygame.Surface(size, pygame.SRCALPHA, 32)
+back = pygame.image.load("images/temp.png")	# Image saved from previous run.
+backRect = back.get_rect()
+#surface = pygame.Surface(size, pygame.SRCALPHA, 32)
 
 # this loop is used to keep the window opened until user closes out of window
 done = False
@@ -170,28 +188,40 @@ clock = pygame.time.Clock()
 surfaces = []
 #this line is used to clear the window and set background color (later background will be a portion of a location on a map)
 screen.fill(WHITE)
-
+screen.blit(back, backRect)
+print("Background drawn")
 
 #draw all the nodes in the list
+print("Drawing nodes...")
+i = 0
 for n in nodeList:
+    i += 1
+    print(str(round((float(i)/float(totalNodes))*100.00, 2))+"%                   ", end='\r')
     surf = pygame.Surface(size, pygame.SRCALPHA, 32)
     #pygame.draw.circle(surf, RED, n.getOrigin(), max(int(n.getRad90() * pixPerKM), 1))
     pygame.draw.circle(surf, REDORANGE, n.getOrigin(), max(int(n.getRad80() * pixPerKM), 1))
-    pygame.draw.circle(surf, GOLD, n.getOrigin(), max(int(n.getRad70() * pixPerKM), 1))
-    pygame.draw.circle(surf, YELLOW, n.getOrigin(), max(int(n.getRad67() * pixPerKM), 1))
-    pygame.draw.circle(surf, GREEN, n.getOrigin(), max(int(n.getRad30() * pixPerKM), 1))
+    #pygame.draw.circle(surf, GOLD, n.getOrigin(), max(int(n.getRad70() * pixPerKM), 1))
+    #pygame.draw.circle(surf, YELLOW, n.getOrigin(), max(int(n.getRad67() * pixPerKM), 1))
+    #pygame.draw.circle(surf, GREEN, n.getOrigin(), max(int(n.getRad30() * pixPerKM), 1))
     pygame.draw.circle(surf, BLUE, n.getOrigin(), 1)
     surfaces.append(surf)
 
+print("All nodes drawn                  ")
+print("Blitting nodes...")
+i = 0
 for surf in surfaces:
+    i += 1
+    print(str(round((float(i)/float(totalNodes))*100.00, 2))+"%                   ", end='\r')
     screen.blit(surf, [0, 0])
-
-
+print("All nodes blitted                ")
+print("Updating display")
 pygame.display.flip()
 
 ciscoCost = totalNodes * 3000
 ruckusCost = totalNodes * 3500
 print("The Estimated Associated cost for "+str(totalNodes)+" Nodes is: Cisco Aironet 1572EAC: $"+str(ciscoCost)+" Ruckus T811-CM: $"+str(ruckusCost))
+#root = tk.Tk()
+#root.withdraw()
 messagebox.showinfo("Estimated Costs", "The Estimated Associated cost for "+str(totalNodes)+" Nodes is: Cisco Aironet 1572EAC: $"+str(ciscoCost)+" Ruckus T811-CM: $"+str(ruckusCost))
 while not done:
     clock.tick(10)
