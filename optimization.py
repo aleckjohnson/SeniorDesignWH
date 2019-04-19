@@ -10,7 +10,6 @@ import sys		# For reading arguments from the command line.
 import networkx as nx
 import osmnx as ox
 import requests
-import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Wedge, Polygon
