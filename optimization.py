@@ -15,13 +15,11 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Wedge, Polygon
 from  matplotlib.collections import PatchCollection
-
-import time
-
 # PyGame imports
 #import pygame
 import math
-
+import WifiNode_class as WirelessNode
+import time         # For debugging only.
 # Zoom function. Still needs to be implemented.
 # Find a way to pull from mouse (pynput library?) or zoom in and out using pygame. 
 st = time.time()
@@ -49,90 +47,16 @@ def makeGraph(city, state, country):
 
 sqrMeters = makeGraph(str(sys.argv[1]), str(sys.argv[2]), str(sys.argv[3]))
 
-#import WifiNode
 
-class WifiNode:
-    #a circle representing the wifi node
-    _origin = [0, 0] #the origin point
-    _frequecy = 0 #input frequency in MHz
-    #all rads in km
-    _rad30 = 0 #Best Coverage
-    _rad67 = 0 #Good Coverage
-    _rad70 = 0 #Okay Coverage
-    _rad80 = 0 #Bad Coverage
-    _rad90 = 0 #unusable coverage
+img = Image.open("images/temp.png")
+pix = img.load()
+size = [img.size[0], img.size[1]]
 
-    _piPerKM = 0
-
-    def __init__(self, orig, freq, ppk):
-        self._frequency = freq
-        self._origin = orig
-        print("Created a wifi node at ", self._origin, " with a frequency of ", self._frequency,"MHz")
-        self._piPerKM = ppk
-        self._rad30 = math.pow(float(10),
-                               (float(30) - float(32.44) - (float(20)*math.log10(self._frequency)))/float(20))
-        self._rad67 = math.pow(float(10),
-                               (float(67) - float(32.44) - (float(20) * math.log10(self._frequency))) / float(20))
-        self._rad70 = math.pow(float(10),
-                               (float(70) - float(32.44) - (float(20) * math.log10(self._frequency))) / float(20))
-        self._rad80 = math.pow(float(10),
-                               (float(80) - float(32.44) - (float(20) * math.log10(self._frequency))) / float(20))
-        self._rad90 = math.pow(float(10),
-                               (float(90) - float(32.44) - (float(20) * math.log10(self._frequency))) / float(20))
-
-    def setArea(self, orig, freq, ppk):
-        self._frequency = freq
-        self._origin = orig
-        print("Changed a wifi node at ", self._origin, " with a frequency of ", self._frequency, "MHz")
-        self._piPerKM = ppk
-        self._rad30 = math.pow(float(10),
-                               (float(30) - float(32.44) - (float(20) * math.log10(self._frequency))) / float(20))
-        self._rad67 = math.pow(float(10),
-                               (float(67) - float(32.44) - (float(20) * math.log10(self._frequency))) / float(20))
-        self._rad70 = math.pow(float(10),
-                               (float(70) - float(32.44) - (float(20) * math.log10(self._frequency))) / float(20))
-        self._rad80 = math.pow(float(10),
-                               (float(80) - float(32.44) - (float(20) * math.log10(self._frequency))) / float(20))
-        self._rad90 = math.pow(float(10),
-                               (float(90) - float(32.44) - (float(20) * math.log10(self._frequency))) / float(20))
-
-    def getFrequency(self):
-        return self._frequency
-
-    def getRad30(self):
-        return self._rad30
-
-    def getRad67(self):
-        return self._rad67
-
-    def getRad70(self):
-        return self._rad70
-
-    def getRad80(self):
-        return self._rad80
-
-    def getRad90(self):
-        return self._rad90
-
-    def getOriginX(self):
-        return self._origin[0]
-
-    def getOriginY(self):
-        return self._origin[1]
-
-    def getOrigin(self):
-        return self._origin
-
-
-im = Image.open("images/temp.png")
-pix = im.load()
-size = [im.size[0], im.size[1]]
-
-ratio = float(im.size[1])/float(im.size[0])
+ratio = float(img.size[1])/float(img.size[0])
 
 temp = float(sqrMeters) / float(ratio)
 x = math.sqrt(temp)
-ppm = float(im.size[0])/x
+ppm = float(img.size[0])/x
 pixPerKM = ppm*float(1000) #Pixels per kilometer conversion
 
 nodeList = []
@@ -170,7 +94,7 @@ for y in range(size[1]):
             continue
         else:
             newLoc = [x, y]
-            nodeList.append(WifiNode(newLoc, frequency, pixPerKM))
+            nodeList.append(WirelessNode.WifiNode(newLoc, frequency, pixPerKM))
             lenny = len(nodeList)
             print("Current number of nodes: ", lenny)
             lenny -= 1
@@ -196,10 +120,11 @@ for n in nodeList:
 
 fig, ax = plt.subplots()                                              # Create figure ax of subplots
 p = PatchCollection(patches, match_original=False, alpha=0.4)         # Assigns PatchCollection() and feeds the collection of patches (2D Artists--graphical primatives) and alpha (transparancy) value.
-img = plt.imread("images/temp.png")         # Reads in the desired image background using plt.imread.
 ax.add_collection(p)                        # Adds the collecttion to the figure ax, which allows the circles to be plotted.
 plt.axis('off')                             # Disables axes.
-ax.imshow(img, aspect='equal')              # Tells the figure to display the image with equal aspect
+ax.imshow(img, aspect='equal')               # Tells the figure to display the image with equal aspect. img was read using pillow when performing calculations.
+#plt.tight_layout()
+et = time.time()
 plt.show()                                  # Prints the image and circles specified above to the screen.
 
 # Generate node costs
@@ -207,7 +132,6 @@ plt.show()                                  # Prints the image and circles speci
 ciscoCost = totalNodes * 3000
 ruckusCost = totalNodes * 3500
 print("The Estimated Associated cost for "+str(totalNodes)+" Nodes is: Cisco Aironet 1572EAC: $"+str(ciscoCost)+" Ruckus T811-CM: $"+str(ruckusCost))
-et = time.time()
 root = tk.Tk()
 root.withdraw()
 messagebox.showinfo("Estimated Costs", "The Estimated Associated cost for "+str(totalNodes)+" Nodes is: Cisco Aironet 1572EAC: $"+str(ciscoCost)+" Ruckus T811-CM: $"+str(ruckusCost))

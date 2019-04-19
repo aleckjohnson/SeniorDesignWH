@@ -1,6 +1,11 @@
 # Git Ignore File
 # Please place any files you do not want to be tracked by git here.
 
+# # Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Auto-generated files when the program is run.
 [Cc]ache/
 [Ii]mages/
 [Dd]ata/
