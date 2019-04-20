@@ -10,13 +10,11 @@ import sys		# For reading arguments from the command line.
 import networkx as nx
 import osmnx as ox
 import requests
-import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Wedge, Polygon
 from  matplotlib.collections import PatchCollection
 # PyGame imports
-#import pygame
 import math
 import WifiNode_class as WirelessNode
 import time         # For debugging only.
@@ -63,15 +61,16 @@ nodeList = []
 noNoSquareList = []
 streets = []
 
-WHITE = [255, 255, 255, 255]
-BLACK = [0, 0, 0, 255]
-BLUE = [0, 0, 255, 255]
-PURPLE = [255, 0, 255, 255]
-GREEN = [0, 255, 0, 50]
-YELLOW = [255, 255, 0, 50]
-GOLD = [255, 204, 0, 50]
-REDORANGE = [255, 51, 0, 50]
-RED = [255, 0, 0, 50]
+# Matplotlib PatchCollection expects all colors to be expressed as rgba values from 0 to 1
+WHITE = [1, 1, 1]
+BLACK = [0, 0, 0]
+BLUE = [0, 0, 1,]
+PURPLE = [1, 0, 1]
+GREEN = [0, 1, 0]
+YELLOW = [1, 1, 0]
+GOLD = [1, 0.8, 0]
+REDORANGE = [1, 0.2, 0]
+RED = [1, 0, 0]
 
 
 
@@ -112,16 +111,20 @@ patches = []            # Patches list
 for n in nodeList:
     i += 1
     print(str(round((float(i)/float(totalNodes))*100.00, 2))+"%                   ", end='\r')      # Update percentage.
-    c1 = Circle(n.getOrigin(), radius = max(int(n.getRad80() * pixPerKM), 1), color='#DD4420')       # Creastes a matplot circle with a center of getOrigin(), radius, and color. Mostly reused from Star's code.
-    c2 = Circle(n.getOrigin(), radius = 1, color='#0000FF')
-    patches.extend([c1, c2])                            # extend allows multiple variables to be appended to a list.
+    #c1 = Circle(n.getOrigin(), max(int(n.getRad90() * pixPerKM), 1), color=RED, alpha=0.6)
+    c2 = Circle(n.getOrigin(), max(int(n.getRad80() * pixPerKM), 1), color=REDORANGE, alpha=0.4)       # Creates a matplot circle with a center of getOrigin(), radius, and color. Mostly reused from Star's code.
+    #c3 = Circle(n.getOrigin(), max(int(n.getRad70() * pixPerKM), 1), color=GOLD, alpha=0.50)
+    #c4 = Circle(n.getOrigin(), max(int(n.getRad67() * pixPerKM), 1), color=YELLOW, alpha=0.45)
+    #c5 = Circle(n.getOrigin(), max(int(n.getRad30() * pixPerKM), 1), color=GREEN, alpha=0.35)
+    c6 = Circle(n.getOrigin(), 1, color=BLUE, alpha=0.25)
+    patches.extend([c2,c6])                            # extend allows multiple variables to be appended to a list.
 
 # Plot data
 
 fig, ax = plt.subplots()                                              # Create figure ax of subplots
-p = PatchCollection(patches, match_original=False, alpha=0.4)         # Assigns PatchCollection() and feeds the collection of patches (2D Artists--graphical primatives) and alpha (transparancy) value.
-ax.add_collection(p)                        # Adds the collecttion to the figure ax, which allows the circles to be plotted.
+p = PatchCollection(patches, match_original=True)         # Assigns PatchCollection() and feeds the collection of patches (2D Artists--graphical primatives) and alpha (transparancy) value.
 plt.axis('off')                             # Disables axes.
+ax.add_collection(p)
 ax.imshow(img, aspect='equal')               # Tells the figure to display the image with equal aspect. img was read using pillow when performing calculations.
 #plt.tight_layout()
 et = time.time()
