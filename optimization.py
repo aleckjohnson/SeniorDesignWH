@@ -7,6 +7,7 @@ from tkinter import messagebox
 
 # OSMNX imports
 import sys		# For reading arguments from the command line.
+import os
 import networkx as nx
 import osmnx as ox
 import requests
@@ -37,16 +38,25 @@ sqrMeters = 0.0
 # Read in arguments from the command line and grab the corresponding area.
 def makeGraph(city, state, country):
     G = ox.graph_from_place(city+','+state+','+country, network_type='all_private')
-    fig, ax = ox.plot_graph(G, node_size=0, save=True, show=False)
+    fig, ax = ox.plot_graph(G, node_size=0, save=True, filename=city, show=False)
     proj = ox.project_graph(G)
+    ox.save_graphml(proj, city+'.graphml')
     gdfs = ox.graph_to_gdfs(proj, edges=False)
     return gdfs.unary_union.convex_hull.area
 
+if (os.path.isfile('data/'+str(sys.argv[1])+'.graphml') == False):
+    sqrMeters = makeGraph(str(sys.argv[1]), str(sys.argv[2]), str(sys.argv[3]))
+else:
+    proj = ox.load_graphml(str(sys.argv[1])+'.graphml')
+    gdfs = ox.graph_to_gdfs(proj, edges=False)
+    sqrMeters = gdfs.unary_union.convex_hull.area
 
-sqrMeters = makeGraph(str(sys.argv[1]), str(sys.argv[2]), str(sys.argv[3]))
+try:            # If the initial reading of the image fails, run makeGraph() and reattempt to read the image.
+    img = Image.open("images/"+str(sys.argv[1])+'.png')
+except IOError:
+    sqrMeters = makeGraph(str(sys.argv[1]), str(sys.argv[2]), str(sys.argv[3]))
+    img = Image.open("images/"+str(sys.argv[1])+'.png')
 
-
-img = Image.open("images/temp.png")
 pix = img.load()
 size = [img.size[0], img.size[1]]
 
